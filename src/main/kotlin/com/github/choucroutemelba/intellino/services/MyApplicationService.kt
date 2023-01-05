@@ -1,6 +1,6 @@
-package org.jetbrains.plugins.template.services
+package com.github.choucroutemelba.intellino.services
 
-import org.jetbrains.plugins.template.MyBundle
+import com.github.choucroutemelba.intellino.MyBundle
 
 class MyApplicationService {
 
