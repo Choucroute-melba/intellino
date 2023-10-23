@@ -1,0 +1,18 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>io.github.choucroutemelba.intellino.intellino</id>
+    <name>Intellino</name>
+    <vendor email="vivien@netc.fr" url="https://github.com/Choucroute-melba/intellino">Vivien - Choucroute_melba</vendor>
+    <description><![CDATA[
+    <h3>Arduino support plugins for CLion</h3>
+    <p>Provides basics features for Arduino development - Serial monitor, build, upload.</p>
+  ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+
+    </extensions>
+</idea-plugin>
