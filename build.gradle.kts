@@ -1,3 +1,5 @@
+fun properties(key: String) = project.findProperty(key).toString()
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.0"
@@ -14,8 +16,8 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.2.5")
-    type.set("IC") // Target IDE Platform
+    version.set(properties("platformVersion")) // Target IDE Version
+    type.set(properties("platformType")) // Target IDE Platform
 
     plugins.set(listOf(/* Plugin Dependencies */))
 }

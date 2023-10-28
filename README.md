@@ -64,6 +64,17 @@ Arduino CLI.
 Interact mostly with the `ArduinoApplicationService` data's.
 
 
+- `core.arduino.Cli`
+
+    Provide a simple way to interact with the Arduino CLI. It is only used by the `ArduinoApplicationService` as 
+the `ArduinoProjectService` uses gRPC instances.
+
+
+- `core.arduino.Grpc`
+
+    Encapsulate a gRPC instance dedicated to a project. (It does not manage the board / port that the project can use)
+
+
 - **Run configuration**
 
     Here the user can modify the options for the Verify and Upload actions like the board, the port and the programmer.
@@ -97,12 +108,61 @@ serial monitor data's.
 ```mermaid
 graph TD
     ArduinoApplicationService-->|SettingsState|Settings
-    ArduinoApplicationService-->|Environment|ArduinoManagementDialog
-    ArduinoApplicationService-->|Available boards,<br/>CLI Instance|ArduinoProjectService
+    ArduinoApplicationService-->|Environment|ui.dialog.ArduinoManagementDialog
+    ArduinoApplicationService-->|Arduino gRPC Instance|ArduinoProjectService
     ArduinoProjectService-->|Data to use and display|ArduinoProjectToolWindow
     ArduinoProjectService-->|CLI Instance|SerialMonitor
     ArduinoProjectToolWindow-.User interaction.->ArduinoProjectService
-    ArduinoManagementDialog-.User interaction.->ArduinoApplicationService
+    ui.dialog.ArduinoManagementDialog-.User interaction.->ArduinoApplicationService
     Settings-.User interaction.->ArduinoApplicationService
+    core.arduino.Cli-->|Arduino CLI access|ArduinoApplicationService
+    ArduinoAppSettingsListener-.App SettingsState change.->ArduinoApplicationService
+    ArduinoAppSettingsConfigurable-.Changes publisher.->ArduinoAppSettingsListener
+    ArduinoAppSettingsConfigurable-->|modify|ArduinoAppSettingsState
+    ArduinoAppSettingsState-->|App SettingsState|ArduinoApplicationService
+    core.arduino.Grpc-->|managed by|ArduinoApplicationService
+    core.arduino.Grpc-.Arduino gRPC access.->ArduinoProjectService
     RunConfiguration-->|Run Parameters|ArduinoProjectService
+```
+
+```mermaid
+---
+title: Intellino plugin detailled structure
+---
+classDiagram
+    Cli --> ArduinoApplicationService : dependency
+    Grpc .. ArduinoApplicationService : runtime management
+    ArduinoAppSettingsState --> ArduinoApplicationService : dependency
+    
+    class ArduinoApplicationService{
+        +cliInstalled: Boolean
+        +dataFolder: String
+        +userFolder: String
+        +arduinoCliPath: String
+        +settingsState: ArduinoAppSettingsState
+        
+        +retrieveCliPath() String?
+        +retrieveUserFolder() String?
+        +retrieveDataFolder() String?
+        +onSettingsChanged()
+    }
+    class Cli{
+        +CliExecutable: String
+        +ouptutFormat: String
+        +configFile: String?
+        +workingDirectory: String
+        
+        +executeCommand(args: String[]) String
+        +executeCommandForJson(args: String[]) JsonObject
+    }
+    class Grpc{
+        +GrpcExecutable: String
+        +GrpcPort: Int
+        +GrpcHost: String
+        
+        //TODO: gRPC methods()
+    }
+    class ArduinoAppSettingsState{
+        +arduinoCliPath: String?
+    }
 ```
