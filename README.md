@@ -107,7 +107,6 @@ serial monitor data's.
 
 ```mermaid
 graph TD
-    ArduinoApplicationService-->|SettingsState|Settings
     ArduinoApplicationService-->|Environment|ui.dialog.ArduinoManagementDialog
     ArduinoApplicationService-->|Arduino gRPC Instance|ArduinoProjectService
     ArduinoProjectService-->|Data to use and display|ArduinoProjectToolWindow

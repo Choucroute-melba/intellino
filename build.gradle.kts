@@ -1,49 +1,29 @@
-fun properties(key: String) = project.findProperty(key).toString()
-
 plugins {
-    id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
-    id("org.jetbrains.intellij") version "1.15.0"
+    id("com.android.application") version "8.1.1" apply false
+    id("com.google.protobuf") version "0.9.4" apply false
+    kotlin("jvm") version "1.9.10" apply false
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1" apply false
 }
 
-group = "io.github.choucroutemelba.intellino"
-version = "1.0-SNAPSHOT"
+ext["grpcVersion"] = "1.57.2"
+ext["grpcKotlinVersion"] = "1.4.0" // CURRENT_GRPC_KOTLIN_VERSION
+ext["protobufVersion"] = "3.24.1"
+ext["coroutinesVersion"] = "1.7.3"
 
-repositories {
-    mavenCentral()
-}
-
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set(properties("platformVersion")) // Target IDE Version
-    type.set(properties("platformType")) // Target IDE Platform
-
-    plugins.set(listOf(/* Plugin Dependencies */))
-}
-
-tasks {
-    // Set the JVM compatibility versions
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+subprojects {
+    repositories {
+        mavenLocal() // For testing new releases of gRPC Kotlin
+        mavenCentral()
+        google()
     }
 
-    patchPluginXml {
-        sinceBuild.set("222")
-        untilBuild.set("232.*")
-    }
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        filter {
+            exclude {
+                it.file.path.startsWith(project.layout.buildDirectory.get().dir("generated").toString())
+            }
+        }
     }
 }
