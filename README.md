@@ -1,5 +1,6 @@
 # Arduino support for Intellij CLion
 This plugin adds support for Arduino C/C++ development to [JetBrains CLion IDE](https://www.jetbrains.com/clion/).
+(wating for a fix from protoc kotlin to continue development)
 
 ## Features
 // TODO
